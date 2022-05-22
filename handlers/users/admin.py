@@ -9,7 +9,7 @@ from datetime import date, datetime
 
 
 
-@dp.message_handler(text="/allusers", user_id=ADMINS)
+@dp.message_handler(text="/allusers", state="*", user_id=ADMINS)
 async def get_all_users(message: types.Message):
     users = db.select_all_users()
     id = []
@@ -30,7 +30,7 @@ async def get_all_users(message: types.Message):
        await bot.send_message(message.chat.id, df)
        
 
-@dp.message_handler(text="/reklama", user_id=ADMINS)
+@dp.message_handler(text="/reklama",state="*",  user_id=ADMINS)
 async def send_ad_to_all(message: types.Message):
     users = db.select_all_users()
     for user in users:
@@ -43,12 +43,12 @@ async def get_all_users(message: types.Message):
     db.delete_users()
     await message.answer("Baza tozalandi!")
 
-@dp.message_handler(text="/cleancart", user_id=ADMINS)
+@dp.message_handler(text="/cleancart",state="*",  user_id=ADMINS)
 async def get_all_users(message: types.Message):
     db.delete_cart()
     await message.answer("Savat tozalandi!")
 
-@dp.message_handler(commands=["category"], user_id=ADMINS)
+@dp.message_handler(commands=["category"],state="*",  user_id=ADMINS)
 async def add_category(message: types.Message):
     await message.answer("Qoshmoqchi bolgan katigorya nomini kiriting!")
     await Category.title.set()
@@ -60,7 +60,7 @@ async def add_cat(message: types.Message, state: FSMContext):
     db.add_category_title(title=str(category))
     await state.finish()
 
-@dp.message_handler(commands=["product"], user_id=ADMINS)
+@dp.message_handler(commands=["product"],state="*", user_id=ADMINS)
 async def add_product(message: types.Message):
     await message.answer("Qoshmoqchi bolgan maxsulotingiz nomini kiriting!")
     await Praduct.title.set()
