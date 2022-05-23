@@ -3,7 +3,6 @@ from aiogram import types
 from states.praduct import Shop
 from keyboards.inline.amount import number
 from aiogram.dispatcher import FSMContext
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 @dp.message_handler(state=Shop.praduct)
 async def get_prod(message: types.Message, state: FSMContext):

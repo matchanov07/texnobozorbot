@@ -1,5 +1,3 @@
-from turtle import title
-from unicodedata import category
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 class Category(StatesGroup):
