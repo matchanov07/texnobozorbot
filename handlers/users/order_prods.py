@@ -1,4 +1,4 @@
-from loader import dp,bot
+from loader import dp,bot, db
 from aiogram import types
 from states.praduct import Shop
 # from aiogram.dispatcher import FSMContext
@@ -10,9 +10,11 @@ from data.config import ADMINS
 @dp.callback_query_handler(text='order', state=Shop.delete)
 async def get_invoice(call: types.CallbackQuery):
     invoice = user_order(tg_id=call.from_user.id)
+    cart = db.get_current_products(tg_id=str(call.message.from_user.id))
     await call.message.delete()
     await bot.send_invoice(chat_id=call.from_user.id, **invoice.generate_invoice(), payload="payload:products")
     await call.answer("CHek jonatildi✅")
+    await Shop.category.set()
 
 @dp.shipping_query_handler(state=Shop.delete)
 async def choose_shipping(query: types.ShippingQuery):
@@ -28,7 +30,7 @@ async def choose_shipping(query: types.ShippingQuery):
         await bot.answer_shipping_query(shipping_query_id=query.id,
                                         shipping_options=[REGULAR_SHIPPING],
                                         ok=True)    
-                    
+    await Shop.category.set()
 
 
 @dp.pre_checkout_query_handler(state=Shop.delete)
@@ -41,4 +43,5 @@ async def process_pre_checkout_query(pre_checkout_query: types.PreCheckoutQuery)
                            text=f"Quyidagi mahsulot sotildi: {pre_checkout_query.invoice_payload}\n"
                                 f"ID: {pre_checkout_query.id}\n"
                                 f"Telegram user: {pre_checkout_query.from_user.first_name}\n"
-                                f"Xaridor: {pre_checkout_query.order_info.name}, tel: {pre_checkout_query.order_info.phone_number}" )                   
+                                f"Xaridor: {pre_checkout_query.order_info.name}, tel: {pre_checkout_query.order_info.phone_number}" )   
+    await Shop.category.set()               
